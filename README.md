@@ -1,16 +1,17 @@
 # engine-build
 Liquid bipropellant rocket engine design tools and and thermal network modeling.
 
-All models are wrong. This one is fun.
+To get started, clone the repository into your desired filepath. See engine_build.m as a template for how to design and simulate an engine.
 
-## How-to
-See engine_build.m as a template for how to design and simulate an engine:
+All models are wrong. This one is fun. 
 
-1. Clone the repository into your desired filepath and make a new script.
-2. Create an "engine" object
-3. Do all your gas property calcs, isentropic sizing, chamber contour design, etc. 
-4. Create a "thermal_network" object and pass it your "engine" object
-5. Configure your cooling system, mesh your nozzle, and see how toasty things get.
+## Design Tools
+The "engine" object contains a bunch of methods for performing high-level isentropic sizing, combustion gas property calcs, and chamber/nozzle contour design.
+
+## Simulation Suite
+The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion equation. Regenerative, film, ablative, and radiative cooling design inputs are implemented as nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
+
+The model is "1.5D", which is to say that heat is diffused *only radially* through your chamber wall and is advected *only axially* along the direction of coolant flow.
 
 ## TODOs
 
@@ -36,6 +37,7 @@ See engine_build.m as a template for how to design and simulate an engine:
     * Add option to use Grisson's model for emissivity (Sam)
     * Advection term finite differencing check (Sam)
   * Total system energy tracking (Sam)
+  * Ablation physics (not critical)
 * Solver 
   * Implement command-window output during simulaton
     * Elapsed time, simulated time, percent completion, etc.
