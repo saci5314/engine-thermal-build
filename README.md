@@ -11,7 +11,7 @@ The "engine" object contains a bunch of methods for performing high-level isentr
 ## Simulation Suite
 The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion eqn solver. Regenerative, film, ablative, and radiative cooling design inputs are implemented as nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
 
-The model is "1.5D", which is to say that heat is diffused *only radially* through your chamber wall and is advected *only axially* along the direction of coolant flow.
+The model is "1.5D", which is to say each phenomenon is differenced in 1D orthogonal to eachother. Heat is diffused *only radially* through your chamber wall and is advected *only axially* along the direction of coolant mass flow. Convective heat transfer (boundary conduction, not mass trasnport) is treated by additional volumetric source terms.
 
 ## TODOs
 
