@@ -15,21 +15,21 @@ The model is "1.5D", which is to say each phenomenon is differenced in 1D orthog
 ## TODOs
 
 ### @engine
-* Chemical equilibrium calcs (Timmy?)
+* Chemical equilibrium calcs (Timmy and/or Andrew?)
   * Compile thermochemical data of relevant species for kerolox/methalox
   * Write rootfinding scheme
   * Write test cases
-* Nozzle design tooling (Andrew?)
-  * Add ability to parameterize by chamber diameter by contraction ratio
-  * Write parabolic contour generation method
+* Nozzle design tooling
+  * Add ability to parameterize by chamber diameter by contraction ratio (Sam)
+  * Write parabolic contour generation method (Andrew)
   * Wtite rao contour generation method
-  * Write contour .dxf import/export methods
+  * Write contour .dxf import/export methods (Sam)
  
 ### @steady_state_thermal
 * Material models
-  * Extend Jet-A model to multiphase for film cooling (Kenny?)
-  * Add Multiphase LNG or LCH4 model (Kenny?)
-  * Add SS 304L model
+  * Extend Jet-A model to multiphase (l/g) for film cooling (Kenny?)
+  * Add Multiphase (l/g) LNG or LCH4 model (Kenny?)
+  * Add SS 304L material model
   * Add Inco 625 material model
 * Physics models
   * Finish implementing film cooling physics (Sam)
