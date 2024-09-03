@@ -1,4 +1,4 @@
-classdef steady_state_thermal < handle
+classdef thermal_network < handle
 
     properties (Access = public)
         %%% ENGINE BEING ANALYZED

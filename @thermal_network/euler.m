@@ -17,8 +17,11 @@ Output:
     T = (vector) [K] solution temps
 %}
 
-%% PREALLOCATING STUFF
-    %%% time data
+%%% ---------------- %%%
+%%% SIMULATION SETUP %%%
+%%% ---------------- %%% 
+
+%%% time data
     % timestep by stab
     [~, Fi, Bo] = dTdt(t_vec(i), T0);
 
@@ -28,6 +31,9 @@ Output:
     %%% temperature data
     T
 
+%%% differentitation matricies
+    Drr = sim.fd_matrix(); % 2nd order for diffusion
+    Ds = sim.fd_materix(); % 1st order for advection
 
 
 %% INTEGRATION LOOP
