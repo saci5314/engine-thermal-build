@@ -59,7 +59,7 @@ reaper = engine; % duh
 
 %% THERMAL ANALYSIS
 
-hotMetal = steady_state_thermal(reaper); % hell yeah brother
+hotMetal = thermal_network(reaper); % hell yeah brother
 
 %%% MESHING
     t_w = .002; % [m] inner wall thickness
