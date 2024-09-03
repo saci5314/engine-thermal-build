@@ -9,7 +9,7 @@ All models are wrong. This one is fun.
 The "engine" object contains a bunch of methods for performing high-level isentropic sizing, combustion gas property calcs, and chamber/nozzle contour design.
 
 ## Simulation Suite
-The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion equation. Regenerative, film, ablative, and radiative cooling design inputs are implemented as nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
+The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion eqn solver. Regenerative, film, ablative, and radiative cooling design inputs are implemented as nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
 
 The model is "1.5D", which is to say that heat is diffused *only radially* through your chamber wall and is advected *only axially* along the direction of coolant flow.
 
