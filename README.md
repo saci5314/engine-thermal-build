@@ -8,7 +8,7 @@ The structural matter of a thrust chamber assembly (TCA) will have some maximum 
 The propellants enter the TCA vaporized or as close to saturation temperature as is desirable for your injector design. Chemical potential energy is converted to the kinetic/vibrational energy of reacting particles. They'll do two things to echange heat with your thrust chamber. First, they'll smack into the wall. Second, dipoles will emit radiation, some of which the TCA will absorb. Once all this energy is transfered to the TCA, we must figure out how to get rid of it quickly. We can dump it into a coolant or radiate it outwards. Additionally, we can place coolant or ablators between the chamber wall and combustion gas to eat much of this energy up front.
 
 ## How ought we model this?
-Below was my first pass at this. A system of nonlinear equations can be constructed by performing a heat balance in a chamber wall and a regenerative coolant in steady-state conditions. With some troublesome rootfinding I got some shoddy results that look promising but do not close, physically or numerically:
+Below was my first pass at this. A system of nonlinear equations can be constructed by performing a 1D heat balance on a regeneratively cooled engine. With some troublesome rootfinding I got some shoddy results that look promising but do not close, physically or numerically:
 
 <img width="1256" alt="PNG image" src="https://github.com/user-attachments/assets/dd5a3ed7-0073-4184-9f5d-179a5f1115bb">
 
