@@ -1,7 +1,7 @@
 classdef thermal_network < handle
 
     properties (Access = public)
-        %%% ENGINE BEING ANALYZED
+        %%% ENGINE DESIGN BEING ANALYZED
         engine
         
         %%% MESH DATA
@@ -74,13 +74,20 @@ classdef thermal_network < handle
         
         %%% SOLVER
         model_checks(sim)
-        thermal_solve(sim) % (UNDER CONSTRUCTION)
+        solve(sim) % (UNDER CONSTRUCTION)
 
         %%% POSTPROCESSING
-        plot_steady_data(sim) % (TODO)
+        plot_steady_data(sim) % (TODO: UPDATE FROM OLD FORMAT)
         plot_transient_data(sim) % (TODO)
         export_sim_results(sim) % (TODO)
 
+    end
+
+    methods (Static, Access = public)
+        %%% PROPERY FUNCTIONS
+        [cp, k, rho, mu, T_freeze, T_vapor] = thermal_fluid_props(fluid, T)
+        [cp, k, rho, cte, T_melt] = thermal_mat_props(material, T, type)
+        
     end
 
     methods (Static, Access = private)
@@ -89,23 +96,21 @@ classdef thermal_network < handle
 
         %%% INTEGRATION SCHEMES
         [t, T] = euler(dTdt, t_span, T0, delta_conv) % (UNDER CONSTRUCTION)
-        [t, T] = rk23(dTdt, t_span, T0, delta_conv) % (TODO)
-        [t, T] = am2(dTdt, t_span, T0, delta_conv) % (TODO)
-
-        %%% FINITE DIFFERENCING METHODS
-        J = fd_jacobian(f, x0, y0) % (TODO)
-        D = fd_matrix(x, n, m) % (TODO)
-        w = fornberg_coefficients(t, m) % (TODO)
-
-        %%% PROPERY FUNCTIONS
-        [cp, k, rho, mu, T_vapor] = thermal_fluid_props(fluid, T) % (TODO)
-        [cp, k, rho, cte, T_melt] = thermal_mat_props(material, T, type) % (TODO)
+        [t, T] = rk2(dTdt, t_span, T0, delta_conv) % (TODO: UPDATE FROM OLD FORMAT)
+        [t, T] = am2(dTdt, t_span, T0, delta_conv) % (TODO: UPDATE FROM OLD FORMAT)
+        
+        %%% FINITE DIFFERENCING ALGORITHMS
+        w = fornberg_coefficients(t, m)
+        D = fd_matrix(x, n, m)
+        J = fd_jacobian(f, x0, y0)
+        x = quasi_newton(f, x1, tol)
 
         %%% HEAT TRANSFER FUNCTIONS
-        h_g = bartz(T_wg, T_c, P_c, gamma, M, c_star, mu, cp, Pr, r, r_t, rc_t) % (TODO)
-        h_c = h_c_coeff(T_c, T_wc, L_eff, A, working_fluid) % (TODO)
-        epsilon_g = emissivity(N_H2O, N_CO2, P, T, V, A, Nx, method) % (TODO)
-        
+        h_wg = bartz(T_wg, T_c, P_c, gamma, M, c_star, mu, cp, Pr, r, r_t, rc_t)
+        h_wc = h_wc_coeff(T_c, T_wc, L_eff, A, working_fluid) % (TODO: FILL IN MISSING RELATIONS FROM RPA)
+        epsilon_g = emissivity(N_H2O, N_CO2, P, T, V, A, method) % (TODO: REVIEW GRISSON METHOD)
+        Nu = nusselt_forced(coolant, Re_cool, Pr_cool, T_wc, T_c) 
+
     end
 
 end

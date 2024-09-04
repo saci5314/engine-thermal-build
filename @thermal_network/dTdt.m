@@ -1,4 +1,4 @@
-function [dTdt, q, Fo, Bi] = dTdt(t, T, Drr, Ds, sim)
+function [dTdt, dTdt_data] = dTdt(t, T, Drr, Ds, sim)
 %{
 This is the evolution equation for the initial-boudary-value problem. It
 finds the time rate of change of structural wall temps, ablatve wall temps,
@@ -15,8 +15,8 @@ Inputs:
     engine = engine object being modeled
 
 Outputs:
-    dTdt = wall element temp rates of change [K/s]
-    Fo = 
+    dTdt = (struct) used to pull out whatever I need into IVBP functions.
+
 %}
 
 %%% RESHAPE EVALUATION TEMP VECTOR
@@ -29,46 +29,43 @@ Outputs:
 %%% ----------------------------------- %%%
 
 if ~isempty(sim.film_coolant)   %%% film cooling present (UNDER CONSTRUCTION) 
-    %%% preallocate some stuff
+    %%% PRALLOCATE
 
     
     
     
-    %%% radiative source terms
-
-
-
-    %%% convective source terms
+    %%% RADIATION
     
 
 
-
-    %%% film coolant evolution (space marching)
+    %%% COOLANT EVOLUTION
     for nx = 1:sim.Nx
-        stage = 0;
-        switch stage
-            case 0 %%% inlet boundary
-                % liquid film state variables
-                T_out(nx) = sim.T_film_in; % [K]
-                mdot_vap(nx) = 0; % [kg/s]
-                
-                stage = 1;
 
-            case 1 %%% liquid flim heating
-                
-                dTdx = q_bl*A/mdot*cp;
-                
-                dTdt(nx,1) = -u_film*dTdx + ;
-                
-                h_wg = 
 
-                % check for boiling point
-                if T_out(nx) >= T_sat
-                    T_film(nx) = 
-                    stage = 2;
+                %%% radiation
+                dTdt(nx,1) = dQdt_film/() % [K/s]
+                
+                %%% hot wall heat flux
+                q_wg(nx) = q_conv_wf + q_rad_wg; % [W/m^2] hot wall heat flux
+
+                %%% coolant energy balance
+                dQdt_film = (mdot_out*cp*T_out - mdot_out*cp*T_out) ...
+                            + q_rad_film + q_film + q_wall; % [W]
+
+                mdot_vap = 
+                if T(nx,1) < T_sat % re
+                    dTdt(nx,1) = dQdt_film/(); % [K/s]
+
+                if T_out(nx) == T_sat
+                    dTdt(nx,1) = dQdt_film/(); % [K/s]
 
                 else 
+
+
+
                 end
+
+                q_wg(nx) = q_film_w + q_rad_w; % [
 
             case 2 %%% boiling stage
                 T_out(nx) = ; % [K]
@@ -91,7 +88,7 @@ if ~isempty(sim.film_coolant)   %%% film cooling present (UNDER CONSTRUCTION)
 
 
 
-else    %%% no film cooling present (READY FOR TESTING)
+else    %%% no film cooling present (UNDER CONSTRUCTION)
 
     %%% heat flux to hot wall
     h_g = bartz(T(:,2), sim.r(:,1), sim.engine.r_t, sim.engine.rc_t); % [W/(m^2*K)] 
@@ -120,8 +117,8 @@ if ~isempty(sim.regen_coolant)   %%% regen cooling present (READY FOR TESTING)
     Nu_cool = sim.nusselt_forced(sim.regen_coolant, Re_cool, Pr_cool, T(:,end-1), T(:,end)); % Nusselt number
 
     % heat flux to cold wall
-    h_c = (k_cool ./ sim.Dh_chan) .* Nu_cool; % [W/(m^2*K)] 
-    q_wc = h_c .* (T(:,end) - T(:,end-1)); % [W/m^2] 
+    h_wc = (k_cool ./ sim.Dh_chan) .* Nu_cool; % [W/(m^2*K)] 
+    q_wc = h_wc .* (T(:,end) - T(:,end-1)); % [W/m^2] 
 
     % advection + cold wall convective heating
     dTdt(:,end) = u_cool .* (Ds * T(:,end)) - ...

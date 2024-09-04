@@ -1,9 +1,6 @@
-function [t, T] = euler(dTdt, T0, t_max, delta_conv)
+function [t, T, sim_data] = euler(dTdt, T0, t_max, delta_conv)
 %{
-1st order euler integration for IBVP.
-
-Author(s):
-    Samuel Ciesielski
+1st order euler integration for thermal network IBVP.
 
 Inputs:
     dTdt = (vector) [K/s] system temperature evolution function
@@ -15,60 +12,103 @@ Inputs:
 Output:
     t = (vector) [s] solution timesteps
     T = (vector) [K] solution temps
+
+Author(s):
+    Samuel Ciesielski
+
 %}
 
 %%% ---------------- %%%
 %%% SIMULATION SETUP %%%
 %%% ---------------- %%% 
 
-%%% time data
-    % timestep by stab
-    [~, Fi, Bo] = dTdt(t_vec(i), T0);
+%%% SIMULATION DATA
 
-    % nominal timestep vector
-    t_vec = linspace(tspan(1), tspan(2), dt); % [s]
+    %%% nominal timestep vector
+    t = linspace(tspan(1), tspan(2), dt); % [s]
     
     %%% temperature data
-    T
+    T = reshape
 
-%%% differentitation matricies
-    Drr = sim.fd_matrix(); % 2nd order for diffusion
-    Ds = sim.fd_materix(); % 1st order for advection
+%%% DIFFERENTIATION MATRICIES
+    Drr = sim.fd_matrix(); % diffusion (TODO)
+    Ds = sim.fd_materix(); % advection (TODO)
 
 
-%% INTEGRATION LOOP
+%%% ------------ %%%
+%%% TIMESTEPPING %%%
+%%% ------------ %%% 
 
-for i = 2:length(t_vec)
-    %%% UPDATED EVOLUTION VECTOR
-    [dTdt, Fo, Bi] = dTdt(t_vec(i), T(i-1,:)); % [K] temp change
+for i = 2:length(t)
 
-    %%% TAKE TIMESTEP
-    if any((1-2*Fo) < 0)    % timestep stability check
-        warning(strcat("Abort - violated timestep criteria at ", ...
-                num2str(t_vec(i))," after ", num2str(i), " iterations."));
+    %%% UPDATE TEMPERATURE EVOLUTION VECTOR
+    [dTdt, dTdt_data] = dTdt(t(i-1), T(i-1,:)); % [K] temp change
 
-        %%% package solution vectors
-        t = t_vec(1:i-1); % [s]
-        T = T(:,1:i-1); % [K]
-        
-        %%% exit integration loop
-        break
-
-    elseif any(Fo.*(1+Bi) > .5)   % surface node stability check
+    %%% DO STABILITY CHECKS AND TAKE TIMESTEP
+    if any()    % Von-Neumann stability criteria for diffusion (TODO)
         %%% throw warning
-        warning(strcat("Abort - violated surface node criteria at ", ...
-                num2str(t_vec(i))," after ", num2str(i), " iterations."));
+        warning(strcat("Abort - violated Von-neuman diffusion criteria at t = ", ...
+                num2str(t(i)),"s after ", num2str(i), " iterations."));
 
-        %%% package solution vectors
-        t = t_vec(1:i); % [s]
+        %%% pack solution vectors
+        t = t(1:i); % [s]
         T = T(:,1:i); % [K]
         
         %%% exit integration loop
         break
 
-    else    % just update new temps
+    elseif any()    % Von-Neumann stability criteria for advection (TODO)
+        %%% throw warning
+        warning(strcat("Abort - violated Von-neuman advection criteria at t = ", ...
+                num2str(t(i)),"s after ", num2str(i), " iterations."));
+
+        %%% pack solution vectors
+        t = t(1:i); % [s]
+        T = T(:,1:i); % [K]
+        
+        %%% exit integration loop
+        break
+
+    elseif any((1-2*dTdt_data.Fo) < 0)    % timestep stability check
+        warning(strcat("Abort - violated timestep criteria at ", ...
+                num2str(t(i))," after ", num2str(i), " iterations."));
+
+        %%% pack solution vectors
+        t = t(1:i-1); % [s]
+        T = T(:,1:i-1); % [K]
+        
+        %%% exit integration loop
+        break
+
+    elseif any(dTdt_data.Fo.*(1+dTdt_data.Bi) > .5)   % surface node stability check
+        %%% throw warning
+        warning(strcat("Abort - violated surface node criteria at t = ", ...
+                num2str(t(i)),"s after ", num2str(i), " iterations."));
+
+        %%% pack solution vectors
+        t = t(1:i); % [s]
+        T = T(:,1:i); % [K]
+        
+        %%% exit integration loop
+        break
+
+    else    % accept timestep
+        %%% sim clock
+        disp(strcat("t_sim = ", num2str(t(i)), " s"));
+        
+        %%% integrate
         T(:,i) = T(:,i-1) + dTdt*dt; % [K]
 
+    end
+
+    %%% PHASE CHANGE CORRECTIONS
+    if ~empty(sim.film_coolant)
+        for nx = 1:Nx
+
+            if T()
+
+            end
+        end
     end
 
     %%% CONVERGENCE CHECK
@@ -76,30 +116,34 @@ for i = 2:length(t_vec)
 
     if all(delta < delta_conv)
         %%% annouce convergence
-        disp(strcat("Solution converged at ", num2str(t_vec(i)), ...
-                    " after ", num2str(i), " iterations."));
+        disp(strcat("Solution converged at t = ", num2str(t(i)), ...
+                    "s after ", num2str(i), " iterations."));
 
-        %%% package solution vectors
-        t = t_vec(1:i); % [s]
+        %%% pack solution vectors
+        t = t(1:i); % [s]
         T = T(:,1:i); % [K]
         
         %%% exit integration loop
         break
+
+    end
         
-    elseif i == length(t_vec)
-        %%% announce no convergence
-       disp("Solution failed to converge by simulation end time.");
+    %%% TIMEOUT
+    if i == length(t)
+        %%% throw alert
+       disp("Simulation timeout. Failed to converge.");
 
        %%% package solution vectors
-       t = t_vec; % [s]
+       t = t(1:i); % [s]
+       T = T(:,1:i); % [s]
 
     end
 
-
 end
 
-
-
+%%% ------------ %%%
+%%% TIMESTEPPING %%%
+%%% ------------ %%% 
 
 
 end
