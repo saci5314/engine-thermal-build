@@ -1,16 +1,18 @@
 # engine-build
 Liquid bipropellant rocket engine design tools and and thermal network modeling.
 
-All models are wrong. At least this model is fun. Here is some shitty data that is wrong but looks pleasant:
+All models are wrong. Fortunately, this model is fun. 
+
+Here is some test data that is wrong but looks pleasant:
 <img width="1256" alt="PNG image" src="https://github.com/user-attachments/assets/dd5a3ed7-0073-4184-9f5d-179a5f1115bb">
 
 ## Design Tools
-The "engine" object contains a bunch of methods for performing high-level isentropic sizing, combustion gas property calcs, and chamber/nozzle contour design.
+The "engine" object contains a bunch of methods for performing high-level isentropic sizing calcs, combustion gas equilibrium property calcs, and nozzle contour design.
 
 ## Simulation Suite
-The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion eqn solver. Regenerative, film, ablative, and radiative cooling design inputs are implemented as nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
+The "thermal_network" object is a suite for simulating heat transfer in your TCA via a convection-diffusion IBVP. Regenerative, film, and radiative cooling design inputs are taken by the user and to form nonlinear boundary conditions. There are a few on-board temperature-dependent property libraries for structural materials and coolants.
 
-The model is "1.5D", which is to say each phenomenon is differenced in 1D orthogonal to eachother. Heat is diffused *only radially* through your chamber wall and is advected *only axially* along the direction of coolant mass flow. Convective heat transfer (boundary conduction, not mass trasnport) is treated by additional volumetric source terms.
+The convection-diffusion problem is solved via an explicit, first-order in time (euler) scheme on a 2D grid. Though the probelm is really reduced to multple 1D finite differencing problems. Diffusion along the length of the chamber is considered negligible. It is only differenced in the radial direction. Advection (heat transport by mass transport) is the assumed mechanism for the the heat carried through the system by the steady flow of coolant. It only needs to be differenced along the length of the nozzle. Convective heat transfer and radiative heat transfer is treated by additional volumetric source terms in coolant and outer-most wall nodes.
 
 ## TODOs
 
