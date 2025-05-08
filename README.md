@@ -5,6 +5,8 @@ Thermal network modeling tools for supersonic nozzles w/ single-pass cooling.
 *!!! Under Construction !!!*
 Solver is currently unstable and is crying out for documentation. 
 
+![alt text](https://github.com/saci5314/engine-thermal-build/blob/main/test_case_img.png?raw=true)
+
 ## @engine TODOs
 * Nozzle design toos
   * Expand options for high-level sizing parameterization
